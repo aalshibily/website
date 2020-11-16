@@ -88,9 +88,16 @@ using BlazorStaticWebsite.Shared;
        
     private int currentCount = 0;
 
-    private void IncrementCount()
+    private void IncrementCount(MouseEventArgs e)
     {
-        currentCount++;
+        if(e.AltKey)
+        {
+            currentCount += 100;
+        }
+        else
+        {
+            currentCount++;
+        }
     }
 
 #line default
