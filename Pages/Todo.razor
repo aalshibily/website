@@ -1,0 +1,15 @@
+﻿@page "/todo"
+
+<h3>Todo List</h3>
+
+
+
+@code {
+    private TodoItem[] Todos;
+
+    public class TodoItem
+    {
+        public string Name { get; set; }
+        public bool Done { get; set; }
+    }
+}
