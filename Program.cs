@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 
 namespace BlazorStaticWebsite
 {
@@ -18,6 +19,11 @@ namespace BlazorStaticWebsite
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+            //Add Blazored LocalStorage support
+            //Also pass in option to prettify the JSON
+            builder.Services.AddBlazoredLocalStorage(config => 
+                config.JsonSerializerOptions.WriteIndented = true);
 
             await builder.Build().RunAsync();
         }
