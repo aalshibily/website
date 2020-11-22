@@ -1,0 +1,107 @@
+﻿@page "/randomjoke"
+@inject IHttpClientFactory ClientFactory
+
+<h3>RandomJoke</h3>
+<div>
+    <button @onclick="() => GetJoke()">Get a joke!</button>
+    <label>Joke Type: </label>
+    <select @onchange="UpdateType">
+        @foreach (string s in JokeTypes)
+        {
+            <option value="@s.ToLower()">@s</option>
+        }
+    </select>
+</div>
+
+<div>
+    <label>
+        <input type="radio" name="singlejoke" @onchange="() => { GetOneJoke = true; }" checked/> 1 Joke
+    </label>
+    <label>
+        <input type="radio" name="singlejoke" @onchange="() => { GetOneJoke = false; }" /> 10 Jokes
+    </label>
+</div>
+
+@if (Jokes.Count == 0)
+{
+    //Render nothing
+}
+else
+{
+    foreach(Joke J in Jokes)
+    {
+        <BlazorStaticWebsite.Components.SingleJoke Joke="J" EvenRow="Jokes.IndexOf(J) % 2 == 0"/>
+    }
+}
+
+
+@code
+{
+    private string JokeType;
+    private bool GetOneJoke;
+
+    public List<Joke> Jokes = new List<Joke>();
+
+    private HttpClient Http;
+
+    private string[] JokeTypes = { "Random", "Programming", "Knock-knock", "General" };
+
+    protected override void OnInitialized()
+    {
+        //Initial Page State and Variables
+        Http = ClientFactory.CreateClient("Joke");
+        JokeType = JokeTypes[0].ToLower();
+        GetOneJoke = true;
+    }
+
+    private async Task GetJoke()
+    {
+        //Clear out current joke(s)
+        Jokes.Clear();
+
+        //Get new joke(s)
+        if (GetOneJoke)
+        {
+            await GetSingleJoke();
+        }
+        else
+        {
+            await GetTenJokes();
+        }
+    }
+
+    private async Task GetSingleJoke()
+    {
+        var type = JokeType.ToLower();
+
+        string request = type == "random" ? "/jokes/random" : $"/jokes/{type}/random";
+
+        var result = await Http.GetStringAsync(request);
+
+        //The API has inconsistent behavior with the returned JSON format, this is a temporary workaround until it's fixed
+        //Will check when it gets fixed https://github.com/15Dkatz/official_joke_api/issues/70
+        result = result.Trim(new char[] { '[', ']' });
+
+        var joke = JsonConvert.DeserializeObject<Joke>(result);
+
+        Jokes.Add(joke);
+    }
+
+    private async Task GetTenJokes()
+    {
+        var type = JokeType.ToLower();
+
+        string request = type == "random" ? "/jokes/ten" : $"/jokes/{type}/ten";
+
+        var result = await Http.GetStringAsync(request);
+
+        var joke = JsonConvert.DeserializeObject<IEnumerable<Joke>>(result);
+
+        Jokes.AddRange(joke);
+    }
+
+    public void UpdateType(ChangeEventArgs e)
+    {
+        JokeType = e.Value.ToString();
+    }
+}

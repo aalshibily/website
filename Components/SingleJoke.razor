@@ -1,0 +1,38 @@
+﻿
+
+<div class="border p-2 m-1 @(EvenRow ? "border-warning" : "border-danger")">
+    <div class="form-inline align-middle">
+        <div class="w-50">
+            <p>Joke Id: @Joke.Id</p>
+        </div>
+        <div class="w-50 form-inline">
+            <p>Joke Type: @JokeTypes[Joke.Type]</p>
+        </div>
+    </div>
+
+    <div class="form-inline">
+        <p>Joke: @Joke.Setup</p>
+    </div>
+
+    <div class="form-inline">
+        <p>Punchline: @Joke.Punchline</p>
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public Joke Joke { get; set; }
+    [Parameter]
+    public bool EvenRow { get; set; }
+
+    //private string[] JokeTypes = { "Random", "Programming", "Knock-knock", "General" };
+
+    private Dictionary<string, string> JokeTypes = new Dictionary<string, string>()
+    {
+        { "random", "❓" },
+        { "programming", "💻" },
+        { "knock-knock", "🚪" },
+        { "general", "😎" }
+    };
+}
