@@ -2,11 +2,174 @@
 
 <h3>Todo List</h3>
 
+<div>
+    <label for="newTodo">Add new Todo</label>
+    <input id="newTodo" type="text" @bind="NewTodo" @onkeyup="e => { if (e.Key == ConsoleKey.Enter.ToString()) AddTodo(); }" />
+    <button class="btn btn-primary" @onclick="AddTodo">Add New Todo</button>
+</div>
 
+<!-- Modal based on https://blazorfiddle.com/s/91rhlt8z and https://gist.github.com/conficient/ba98d1662c659e170ec16650acea05c8 -->
+<!-- Added improvements from https://gist.github.com/conficient/ba98d1662c659e170ec16650acea05c8#gistcomment-3339894 -->
+<!-- Modal -->
+@if (ShowModal)
+{
+    <div class="modal fade show" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog" @onclick="@ModalCancel">
+        <div class="modal-dialog" @onclick:stopPropagation="true">
+            <div class="modal-content">
 
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm action</h4>
+                    <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this? Click "Delete" to confirm.</p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn" @onclick="@ModalCancel">Cancel</button>
+                    <button type="button" class="btn btn-danger" @onclick=@ModalOk>Delete</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="col-3">Status</th>
+            <th class="col-6">Item</th>
+            <th class="col-3">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Todos.Count == 0 || Todos is null)
+        {
+            <tr>
+                <td colspan="3">
+                    <h3>You have nothing to do. Is that a good or bad thing? 🤔</h3>
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (TodoItem todo in Todos.Where(x =>
+             {
+                 if (string.IsNullOrEmpty(filter))
+                 {
+                  //return everything
+                  return true;
+                 }
+                 else if (filter == "complete")
+                 {
+                     return x.Done == true;
+                 }
+                 else
+                 {
+                     return x.Done == false;
+                 }
+             }//end predicate
+          )//end where
+             )//end foreach
+            {
+                <tr>
+                    <td @onclick="() => ToggleTodo(todo)">
+                        <h5 class="oi @(todo.Done ? "oi-check" : "oi-x")" />
+                    </td>
+                    <td @onclick="() => ToggleTodo(todo)">
+                        <h5 class="@(todo.Done ? "strike disabled" : string.Empty)">@todo.Name</h5>
+                    </td>
+                    <td @onclick="() => ModalShow(todo)">
+                        <h5 class="oi oi-trash red" />
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<div class="btn-group d-flex" role="group" aria-label="Filter button group">
+    <button type="button" @onclick="@(() => { filter = string.Empty; })" class="btn btn-secondary @(filter == string.Empty ? "font-weight-bold" : string.Empty)">All</button>
+    <button type="button" @onclick="@(() => { filter = "incomplete"; })" class="btn btn-secondary @(filter == "incomplete" ? "font-weight-bold" : string.Empty)">In-Progress(@Todos.Count(x => !x.Done))</button>
+    <button type="button" @onclick="@(() => { filter = "complete"; })" class="btn btn-secondary @(filter == "complete" ? "font-weight-bold" : string.Empty)">Completed(@Todos.Count(x => x.Done))</button>
+</div>
+
+<style>
+    .strike {
+        text-decoration: line-through;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .green {
+        color: green;
+    }
+</style>
 
 @code {
-    private TodoItem[] Todos;
+    private string filter = string.Empty;
+
+    private string NewTodo = string.Empty;
+
+    private bool ShowModal = false;
+
+    private TodoItem Focus = null;
+
+    private void ModalShow(TodoItem Clicked)
+    {
+        Focus = Clicked;
+        ShowModal = true;
+    }
+    private void ModalCancel()
+    {
+        Focus = null;
+        ShowModal = false;
+    }
+    private void ModalOk()
+    {
+        //Console.WriteLine("Modal ok");
+        DeleteTodo();
+        Focus = null;
+        ShowModal = false;
+    }
+
+    private List<TodoItem> Todos = new List<TodoItem>()
+{
+        new TodoItem { Done = false, Name = "Take out trash" },
+        new TodoItem { Done = false, Name = "Banish the racoon from the city" },
+        new TodoItem { Done = true, Name = "Get groceries and dinner for the fam" }
+    };
+
+    private void ToggleTodo(TodoItem Toggled)
+    {
+        Toggled.Done = !Toggled.Done;
+    }
+
+    private void DeleteTodo()
+    {
+        Todos.Remove(Focus);
+    }
+
+    private void AddTodo()
+    {
+        if (string.IsNullOrEmpty(NewTodo) || string.IsNullOrWhiteSpace(NewTodo))
+        {
+            return;
+        }
+        else
+        {
+            var ToAdd = new TodoItem() { Done = false, Name = NewTodo };
+            Todos.Add(ToAdd);
+            NewTodo = string.Empty;
+        }
+    }
 
     public class TodoItem
     {

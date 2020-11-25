@@ -1,26 +1,42 @@
 ﻿@page "/randomjoke"
 @inject IHttpClientFactory ClientFactory
 
-<h3>RandomJoke</h3>
-<div>
-    <button @onclick="() => GetJoke()">Get a joke!</button>
-    <label>Joke Type: </label>
-    <select @onchange="UpdateType">
-        @foreach (string s in JokeTypes)
-        {
-            <option value="@s.ToLower()">@s</option>
-        }
-    </select>
+<h3>Random Joke</h3>
+<p>This section focuses on calling an API that is triggered using an action/event</p>
+<p>Click <strong @onclick="() => TechInfoHidden = !TechInfoHidden">here</strong> for more technical info</p>
+
+<p class="@(TechInfoHidden ? "hideInfo" : string.Empty)">
+    All the code is written in C# and .NET which is then compiled to WebAssembly.
+    <br />Pretty neat as it allows backend and frontend logic to be written using the same .NET code and C#.
+    <br />The repo and documentation for the API used on this page is <a href="https://github.com/15Dkatz/official_joke_api" target="_blank">HERE</a> <em>Opens in new tab</em>
+</p>
+<br />
+
+<div class="">
+    <div class="form-group form-inline">
+        <label fpr="selection" >Joke Type: </label>
+        <select class="form-control" id="selection" @onchange="UpdateType">
+            @foreach (string s in JokeTypes)
+            {
+                <option value="@s.ToLower()">@s</option>
+            }
+        </select>
+    </div>
 </div>
 
-<div>
-    <label>
-        <input type="radio" name="singlejoke" @onchange="() => { GetOneJoke = true; }" checked/> 1 Joke
-    </label>
-    <label>
-        <input type="radio" name="singlejoke" @onchange="() => { GetOneJoke = false; }" /> 10 Jokes
-    </label>
+<div class="mt-1 mb-1">
+    <label>Number of Jokes: </label>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="singlejoke" id="one-joke" @onchange="() => { GetOneJoke = true; }" checked />
+        <label class="form-check-label" for="one-joke">1 Joke</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="singlejoke" id="ten-jokes" @onchange="() => { GetOneJoke = false; }" />
+        <label class="form-check-label" for="ten-jokes">10 Jokes</label>
+    </div>
 </div>
+
+<button class="btn btn-primary mr-3 mb-3" @onclick="() => GetJoke()">Get @(GetOneJoke ? "joke" : "jokes")!</button>
 
 @if (Jokes.Count == 0)
 {
@@ -28,17 +44,24 @@
 }
 else
 {
-    foreach(Joke J in Jokes)
+    foreach (Joke J in Jokes)
     {
-        <BlazorStaticWebsite.Components.SingleJoke Joke="J" EvenRow="Jokes.IndexOf(J) % 2 == 0"/>
+        <BlazorStaticWebsite.Components.SingleJoke Joke="J" EvenRow="Jokes.IndexOf(J) % 2 == 0" />
     }
 }
 
+<style>
+    .hideInfo {
+        visibility: hidden;
+    }
+</style>
 
 @code
 {
     private string JokeType;
     private bool GetOneJoke;
+
+    private bool TechInfoHidden = true;
 
     public List<Joke> Jokes = new List<Joke>();
 

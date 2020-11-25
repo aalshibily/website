@@ -1,4 +1,5 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">BlazorStaticWebsite</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -24,7 +25,12 @@
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="randomjoke">
-                <span class="oi oi-shield" aria-hidden="true"></span> Random Jokes
+                <span class="oi oi-heart" aria-hidden="true"></span> Random Jokes
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="todo">
+                <span class="oi oi-list" aria-hidden="true"></span> Todo List
             </NavLink>
         </li>
     </ul>
