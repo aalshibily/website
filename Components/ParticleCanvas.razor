@@ -1,0 +1,18 @@
+﻿@inject IJSRuntime JS
+<canvas class="background"></canvas>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine("Initializing particle JS");
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("Particles.init", new
+            {
+                selector = ".background",
+                color = "#00FFFF",
+                maxParticles = 100,
+                connectParticles = true
+            });
+        }
+    }
+}

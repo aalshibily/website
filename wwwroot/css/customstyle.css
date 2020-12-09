@@ -12,4 +12,16 @@
     top: 0;
     left: 0;
     z-index: -1;
-} 
+}
+
+.custom-card {
+    background-color: rgba(100,100,100,.5);
+}
+
+.custom-card > img {
+    height: 75px;
+}
+
+.custom-card:hover {
+    background-color: dimgray;
+}

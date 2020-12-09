@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
+using BlazorStaticWebsite.Components;
 
 namespace BlazorStaticWebsite
 {
@@ -17,6 +18,7 @@ namespace BlazorStaticWebsite
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
+            //builder.RootComponents.Add<ParticleCanvas>("pcan");
 
             //builder.Services.AddScoped(x => new HttpClient()
             //{ BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
