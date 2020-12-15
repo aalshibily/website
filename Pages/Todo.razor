@@ -2,11 +2,19 @@
 
 <h3>Todo List</h3>
 
+<p>
+    This part highlights how Blazor is able to handle user triggered events on the page using event listeners and methods, all written in Blazor/C# syntax.
+    Looks no different from regular html when compiled and performs similar to other Javascript component based frameworks such React!
+    <br />Pre-comiled source is <a href="https://github.com/aalshibily/website/blob/main/Pages/Todo.razor" target="_blank">here</a>! <em>Note: Opens in new tab!</em>
+</p>
+
 <div>
     <label for="newTodo">Add new Todo</label>
     <input id="newTodo" type="text" @bind="NewTodo" @onkeyup="e => { if (e.Key == ConsoleKey.Enter.ToString()) AddTodo(); }" />
     <button class="btn btn-primary" @onclick="AddTodo">Add New Todo</button>
 </div>
+
+<br />
 
 <!-- Modal based on https://blazorfiddle.com/s/91rhlt8z and https://gist.github.com/conficient/ba98d1662c659e170ec16650acea05c8 -->
 <!-- Added improvements from https://gist.github.com/conficient/ba98d1662c659e170ec16650acea05c8#gistcomment-3339894 -->
@@ -143,8 +151,10 @@
     private List<TodoItem> Todos = new List<TodoItem>()
 {
         new TodoItem { Done = false, Name = "Take out trash" },
-        new TodoItem { Done = false, Name = "Banish the racoon from the city" },
-        new TodoItem { Done = true, Name = "Get groceries and dinner for the fam" }
+        new TodoItem { Done = false, Name = "Banish racoons from the city" },
+        new TodoItem { Done = true, Name = "Get groceries and dinner for the fam" },
+        new TodoItem { Done = false, Name = "Make items in list editable (Future Feature)" },
+        new TodoItem { Done = false, Name = "Persist items in LocalStorage aka browser storage 💾 (Future Feature)" }
     };
 
     private void ToggleTodo(TodoItem Toggled)

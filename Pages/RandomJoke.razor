@@ -2,12 +2,16 @@
 @inject IHttpClientFactory ClientFactory
 
 <h3>Random Joke</h3>
-<p>This section focuses on calling an API that is triggered using an action/event</p>
+<p>
+    This section focuses on calling an API that is triggered using an action/event
+    <br />Pre-comiled source is <a href="https://github.com/aalshibily/website/blob/main/Pages/RandomJoke.razor" target="_blank">here</a>! <em>Note: Opens in new tab!</em>
+</p>
 <p>Click <strong @onclick="() => TechInfoHidden = !TechInfoHidden">here</strong> for more technical info</p>
 
 <p class="@(TechInfoHidden ? "hideInfo" : string.Empty)">
     All the code is written in C# and .NET which is then compiled to WebAssembly.
     <br />Pretty neat as it allows backend and frontend logic to be written using the same .NET code and C#.
+    <br />Similar to the Fetch Data section, it utilizes C# HttpClient but this time to call an external API and parse the data using (.NET) objects.
     <br />The repo and documentation for the API used on this page is <a href="https://github.com/15Dkatz/official_joke_api" target="_blank">HERE</a> <em>Opens in new tab</em>
 </p>
 <br />

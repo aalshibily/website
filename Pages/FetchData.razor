@@ -3,7 +3,7 @@
 
 <h1>Weather forecast</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p>This component demonstrates fetching data from a local JSON file hosted on the repo/filesystem.</p>
 
 @if (forecasts == null)
 {
@@ -32,7 +32,14 @@ else
             }
         </tbody>
     </table>
+
 }
+<br />
+
+<p>
+    Boiler plate code that comes with the project by default. It demonstrates the ability of Blazor to use a C# HttpClient to get and serve a local JSON file, good for serving static data/content.
+    <br />Pre-comiled source is <a href="https://github.com/aalshibily/website/blob/main/Pages/FetchData.razor" target="_blank">here</a>! <em>Note: Opens in new tab!</em>
+</p>
 
 @code {
     private WeatherForecast[] forecasts;
